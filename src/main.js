@@ -45,6 +45,7 @@ class PowerscourtGame extends LitElement {
   }
 
   firstUpdated() {
+    const assetBase = import.meta.env.BASE_URL;
     this.canvas = this.renderRoot.querySelector('canvas');
     this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer({canvas: this.canvas, antialias: true});
@@ -55,7 +56,7 @@ class PowerscourtGame extends LitElement {
     this.renderer.shadowMap.enabled = true;
     const pmrem = new THREE.PMREMGenerator(this.renderer);
     this.scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
-    new HDRLoader().load('/skyboxes/overcast.hdr', texture => {
+    new HDRLoader().load(`${assetBase}skyboxes/overcast.hdr`, texture => {
       texture.mapping = THREE.EquirectangularReflectionMapping;
       texture.colorSpace = THREE.LinearSRGBColorSpace;
       this.scene.background = texture;
@@ -102,7 +103,7 @@ class PowerscourtGame extends LitElement {
 
   async loadMap() {
     try {
-      const gltf = await this.loader.loadAsync('/models/powerscourt-house.glb');
+      const gltf = await this.loader.loadAsync(`${import.meta.env.BASE_URL}models/powerscourt-house.glb`);
       this.map = gltf.scene;
       this.map.traverse(object => {
         if (!object.isMesh) return;
